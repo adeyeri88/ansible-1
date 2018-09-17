@@ -1,7 +1,5 @@
 ---
-- Name: Deploy Splunk Universal Forwarder
-  hosts: all
-
+- hosts: all
   tasks:
   - name: Touch a file (creates if not present, updates modification time if present)
     win_file:
