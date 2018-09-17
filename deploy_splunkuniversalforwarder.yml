@@ -21,7 +21,7 @@
   - name: Unzip Splunk
     win_unzip:
       src: C:\temp\splunk.zip
-      dest: C:\temp\ansible
+      dest: C:\temp\ansible\splunk
       delete_archive: yes
     when: SplunkUFServiceResult['exists'] == false
 
