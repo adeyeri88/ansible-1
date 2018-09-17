@@ -13,7 +13,7 @@
 
   - name: Unzip Splunk
     win_unzip:
-      src: "C:\\temp\\ansible"
+      src: "C:\\temp\\splunk.zip"
       dest: "C:\\temp\\ansible"
       delete_archive: yes
 
