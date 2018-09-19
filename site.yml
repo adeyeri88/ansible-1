@@ -1,0 +1,8 @@
+---
+- hosts: Windows_Servers
+  roles:
+    -windows
+
+- hosts: Linux_Servers
+  roles:
+    -linux
