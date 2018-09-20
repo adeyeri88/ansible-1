@@ -20,7 +20,7 @@
     unarchive:
       src: https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/ansible/splunk/install_splunk_uf_linux.tgz
       dest: /bintemp/cloudops/tools/ansible/splunk
-      remote_src: yes
+      remote_src: no
       extra_opts: [--strip-components=1]
       creates: /bintemp/cloudops/tools/ansible/splunk
     when: splunk_path.stat.exists == false
