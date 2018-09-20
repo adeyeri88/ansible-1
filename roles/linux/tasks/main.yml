@@ -14,7 +14,6 @@
       path: /bintemp
       state: directory
       mode: 0755
-      become_method: sudo
     when: splunk_path.stat.exists == false
 
   - name: Download & Unarchive Splunk
@@ -23,13 +22,11 @@
       dest: /bintemp/cloudops/tools/ansible/splunk
       remote_src: yes
       copy: no
-      become_method: sudo
       extra_opts: [--strip-components=1]
     when: splunk_path.stat.exists == false
 
   - name: Execute Splunk Shell Script
     script: /bintemp/cloudops/tools/ansible/splunk/install-uf.sh
-    become_method: sudo
     when: splunk_path.stat.exists == false
 
   - name: Print some debug information 
