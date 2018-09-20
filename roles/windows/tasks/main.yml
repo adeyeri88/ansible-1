@@ -29,10 +29,6 @@
     when: SplunkUFServiceResult['exists'] == false
 
   - name: Print some debug information 
-    vars: 
-      msg: |
-          Ansible Distribution: {{ ansible_distribution }}
-          Ansible Dist version: {{ ansible_distribution_version }}
     debug: 
         msg: "System {{ inventory_hostname }} has OS {{ansible_distribution}}"   
     tags: debug_info

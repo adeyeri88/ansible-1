@@ -1,12 +1,39 @@
 ---
-- name: redhat deployment
-  import_tasks: redhat.yml
-  when: ansible_os_platform|lower == 'redhat'
+  tasks:
+  - name: Checking if splunk is installed
+    stat: 
+        path: /opt/splunkforwarder
+    register: splunk_path
 
-- name: centos deployment
-  import_tasks: centos.yml
-  when: ansible_os_platform|lower == 'centos'
+  - name: splunk is installed
+    debug: msg='splunk is already installed under /opt/splunkforwarder'
+    when: splunk_path.stat.exists == true
 
-  debug: 
-    msg: "System {{ inventory_hostname }} has OS {{ansible_distribution}}"   
-  tags: debug_info
+
+  - name: Touch a dir (creates if not present, updates modification time if present)
+    file:
+      path: /bintemp
+      state: directory
+      mode: 0755
+      become_method: sudo
+    when: splunk_path.stat.exists == false
+
+  - name: Download & Unarchive Splunk
+    unarchive:
+      src: https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/ansible/splunk/install_splunk_uf_linux.tgz
+      dest: /bintemp/cloudops/tools/ansible/splunk
+      remote_src: yes
+      copy: no
+      become_method: sudo
+      extra_opts: [--strip-components=1]
+    when: splunk_path.stat.exists == false
+
+  - name: Execute Splunk Shell Script
+    script: /bintemp/cloudops/tools/ansible/splunk/install-uf.sh
+    become_method: sudo
+    when: splunk_path.stat.exists == false
+
+  - name: Print some debug information 
+    debug: 
+        msg: "System {{ inventory_hostname }} has OS {{ansible_distribution}}"   
+    tags: debug_info
