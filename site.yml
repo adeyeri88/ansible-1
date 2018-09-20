@@ -1,10 +1,12 @@
 ---
 - hosts: windows
+  gather_facts: no
   tasks:
     - include_role:
         name: windows
 
 - hosts: linux
+  gather_facts: no
   tasks:
     - include_role:
         name: linux
