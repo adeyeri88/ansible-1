@@ -1,8 +1,9 @@
 ---
-- hosts: Windows_Servers
-  roles:
-    -windows
+- name: set specific variables for distributions
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
 
-- hosts: Linux_Servers
-  roles:
-    -linux
+- name: say something
+  debug: msg="foo={{ foo }}"
