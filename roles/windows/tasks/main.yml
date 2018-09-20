@@ -1,0 +1,4 @@
+---
+- debug: 
+    msg: "System {{ inventory_hostname }} has OS {{ansible_distribution}}"
+

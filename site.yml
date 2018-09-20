@@ -1,9 +1,10 @@
 ---
-- name: set specific variables for distributions
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_os_family }}.yml"
-    - "default.yml"
+- hosts: windows
+  tasks:
+    - include_role:
+        name: windows
 
-- name: say something
-  debug: msg="foo={{ foo }}"
+- hosts: linux
+  tasks:
+    - include_role:
+        name: linux
