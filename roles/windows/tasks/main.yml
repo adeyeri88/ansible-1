@@ -1,5 +1,4 @@
 ---
-  tasks:
   - name: Check to see if Splunk Universal Forwarder service is installed
     win_service:
       name: "SplunkForwarder"

@@ -1,5 +1,4 @@
 ---
-  tasks:
   - name: Checking if splunk is installed
     stat: 
         path: /opt/splunkforwarder
