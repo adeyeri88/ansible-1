@@ -27,9 +27,7 @@
     when: splunk_path.stat.exists == false
 
   - name: Execute Splunk Shell Script
-    shell: install-uf.sh
-    args:
-      chdir: /bintemp/cloudops/tools/ansible/splunk/
+    command: "sh /bintemp/cloudops/tools/ansible/splunk/install-uf.sh /bintemp/cloudops/tools/ansible/splunk"
     when: splunk_path.stat.exists == false
 
   - name: Print some debug information 
