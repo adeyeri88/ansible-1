@@ -1,15 +1,10 @@
-# Deploy Spunk Agent
-Deploy the splunk universal forwarder to linux/windows (x64 only) hosts via Ansible Tower
+# Deploy Spunk Universal Forwarder
+-Ansible playbooks to deploy splunk universal forwarder to linux/windows (x64 only) hosts
+-Hosts managed through Ansible Tower instance
 
 ## Getting Started
 
 ### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
 
 ### Installing
 
