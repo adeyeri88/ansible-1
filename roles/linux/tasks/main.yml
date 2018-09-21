@@ -9,11 +9,13 @@
     when: splunk_path.stat.exists == true
 
 
-  - name: Touch a dir (creates if not present, updates modification time if present)
+  - name: Create Directory
+    become: yes
     file:
       path: /bintemp/cloudops/tools/ansible/splunk
       state: directory
       mode: 0755
+      recurse: yes
     when: splunk_path.stat.exists == false
 
   - name: Download & Unarchive Splunk
