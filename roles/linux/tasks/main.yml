@@ -8,16 +8,6 @@
     debug: msg='splunk is already installed under /opt/splunkforwarder'
     when: splunk_path.stat.exists == true
 
-
-  - name: Create Directory
-    become: yes
-    file:
-      path: /bintemp/cloudops/tools/ansible/splunk
-      state: directory
-      mode: 0755
-      recurse: yes
-    when: splunk_path.stat.exists == false
-
   - name: Download & Unarchive Splunk
     unarchive:
       src: https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/ansible/splunk/install_splunk_uf_linux.tgz
