@@ -1,6 +1,7 @@
 # Deploy Spunk Universal Forwarder
--Ansible playbooks to deploy splunk universal forwarder to linux/windows (x64 only) hosts
--Hosts managed through Ansible Tower instance
+Ansible playbooks to deploy splunk universal forwarder to linux/windows (x64 only) hosts
+
+Hosts managed through Ansible Tower instance
 
 ## Getting Started
 
