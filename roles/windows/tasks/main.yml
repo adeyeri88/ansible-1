@@ -10,7 +10,7 @@
       state: directory
     when: SplunkUFServiceResult['exists'] == false
 
-  - name: Get Splunk Zip
+  - name: Get Splunk x64 Zip
     win_get_url:
       url: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/ansible/splunk/splunk.zip"
       dest: c:\temp\splunk.zip
