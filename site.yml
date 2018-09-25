@@ -4,6 +4,8 @@
   tasks:
     - include_role:
         name: windows
+    - debug:
+        msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }}"
 #      when:
 #        - ansible_architecture is search("64")
 
@@ -12,5 +14,7 @@
   tasks:
     - include_role:
         name: linux
+    - debug:
+        msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }}"        
 #      when:
 #        - ansible_architecture is search("64")
