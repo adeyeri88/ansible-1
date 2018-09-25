@@ -4,11 +4,13 @@
   tasks:
     - include_role:
         name: windows
-      when: ansible_architecture | search("*64*")
+      when:
+        - ansible_architecture is search("64")
 
 - hosts: linux
   gather_facts: no
   tasks:
     - include_role:
         name: linux
-      when: ansible_architecture | search("*64*")
+      when:
+        - ansible_architecture is search("64")
