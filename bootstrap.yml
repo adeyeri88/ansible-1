@@ -5,8 +5,6 @@
     - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
       psexec:
         hostname: "{{ansible_host}}"
-        connection_username: Administrator
-        connection_password: Password01
         encrypt: yes
         executable: powershell.exe
         arguments: '-'
