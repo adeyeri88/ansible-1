@@ -7,4 +7,3 @@
         hostname: "{{ansible_host}}"
         executable: cmd.exe
         arguments: /c echo Hello World
-    - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
