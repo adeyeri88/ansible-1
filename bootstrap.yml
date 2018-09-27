@@ -2,6 +2,11 @@
 - hosts: windows
   gather_facts: yes
   tasks:
+    - name: run a cmd.exe command
+      psexec:
+        hostname: "{{ansible_host}}"
+        executable: cmd.exe
+        arguments: /c echo Hello World
     - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
       psexec:
         hostname: "{{ansible_host}}"
