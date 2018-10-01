@@ -2,13 +2,19 @@
 - hosts: windows
   gather_facts: no
   tasks:
-    - name: Disable encryption to work with Windows Server 2008 (R2)
+    - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
       psexec:
         hostname: "{{ansible_host}}"
-        encrypt: no
         connection_username: hccadmin
         connection_password: ServiceP@ss123!
-        executable: whoami.exe
-        process_username: System
-      delegate_to: localhost
-      register: psexec_process_system
+        encrypt: no
+        executable: powershell.exe
+        arguments: '-'
+        stdin: |
+            $ErrorActionPreference = "Stop"
+            $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
+            $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
+            [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
+            $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+            Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
+            exit
