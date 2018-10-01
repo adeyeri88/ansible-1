@@ -2,7 +2,7 @@
 - hosts: windows
   gather_facts: no
   tasks:
-    - name: Upgrade PowerShell
+    - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
       psexec:
         hostname: "{{ansible_host}}"
         connection_username: hccadmin
