@@ -18,5 +18,4 @@
             $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/upgrade_to_ps3.ps1"
             Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
             exit
-      delegate_to: localhost
       register: psexec_process_system
