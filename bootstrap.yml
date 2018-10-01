@@ -6,10 +6,11 @@
       psexec:
         hostname: "{{ansible_host}}"
         encrypt: no
-        connection_username: hccadmin
-        connection_password: ServiceP@ss123!
+        connection_username: '{{ansible_user}}'
+        connection_password: '{{ansible_password}}'
         integrity_level: elevated
-        process_username: hccadmin
-        process_password: ServiceP@ss123!
+        process_username: '{{ansible_user}}'
+        process_password: '{{ansible_password}}'
         executable: powershell.exe
         arguments: (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller().IsBusy
+      delegate_to: localhost
