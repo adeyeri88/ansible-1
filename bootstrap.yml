@@ -1,13 +1,15 @@
 ---
 - hosts: windows
   gather_facts: no
-  connection: local
   tasks:
-    - name: run a cmd.exe command
+    - name: Disable encryption to work with Windows Server 2008 (R2)
       psexec:
         hostname: "{{ansible_host}}"
         encrypt: no
         connection_username: hccadmin
         connection_password: ServiceP@ss123!
-        executable: cmd.exe
-        arguments: /c echo Hello World
+        integrity_level: elevated
+        process_username: hccadmin
+        process_password: ServiceP@ss123!
+        executable: powershell.exe
+        arguments: (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller().IsBusy
