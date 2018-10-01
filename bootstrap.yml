@@ -7,6 +7,7 @@
       psexec:
         hostname: "{{ansible_host}}"
         encrypt: no
-        process_username: System
+        connection_username: hccadmin
+        connection_password: ServiceP@ss123!
         executable: cmd.exe
         arguments: /c echo Hello World
