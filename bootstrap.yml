@@ -8,9 +8,7 @@
         encrypt: no
         connection_username: '{{ansible_user}}'
         connection_password: '{{ansible_password}}'
-        integrity_level: elevated
-        process_username: '{{ansible_user}}'
-        process_password: '{{ansible_password}}'
-        executable: powershell.exe
-        arguments: (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller().IsBusy
+        executable: whoami.exe
+        process_username: System
       delegate_to: localhost
+      register: psexec_process_system
