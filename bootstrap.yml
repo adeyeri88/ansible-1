@@ -9,13 +9,13 @@
         connection_password: ServiceP@ss123!
         encrypt: no
         executable: powershell.exe
-        arguments: '-'
+        arguments: '-version 3.0 -username "hccadmin" -password "ServiceP@ss123!" -Verbose'
         stdin: |
             $ErrorActionPreference = "Stop"
             $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
             $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
             [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
-            $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/upgrade_to_ps3.ps1"
+            $url = "https://github.com/jborean93/ansible-windows/blob/master/scripts/Upgrade-PowerShell.ps1"
             Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
             exit
       register: psexec_process_system
