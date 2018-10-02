@@ -1,10 +1,9 @@
 ---
-- hosts: all
-  connection: local
+- hosts: localhost
   tasks:
     - name: Add tower group
       tower_group:
-        name: os_{{ ansible_distribution }}
+        name: os_Windows
         inventory: "Cloud Servers"
         state: present
         group_by:
