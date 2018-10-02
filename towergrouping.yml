@@ -3,7 +3,8 @@
   tasks:
     - name: Add tower group
       tower_group:
-        tower_host: ansibletower
+        tower_host: https://cloud-ansible.pw.utc.com
+        tower_username: ansibletower        
         tower_password: Tower@ccess!23
         name: os_{{ ansible_distribution }}
         inventory: "Cloud Servers"
