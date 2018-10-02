@@ -15,7 +15,9 @@
             $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
             $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
             [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
-            $url = "https://github.com/jborean93/ansible-windows/blob/master/scripts/Upgrade-PowerShell.ps1"
+            $url = "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Upgrade-PowerShell.ps1"
             Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
             exit
+      delegate_to: localhost
       register: psexec_process_system
+      
