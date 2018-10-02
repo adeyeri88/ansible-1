@@ -9,6 +9,8 @@
         connection_password: ServiceP@ss123!
         encrypt: no
         integrity_level: elevated
+        process_username: hccadmin
+        process_password: ServiceP@ss123!
         executable: powershell.exe
         arguments: '-'
         stdin: |
