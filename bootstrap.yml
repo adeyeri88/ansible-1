@@ -9,11 +9,16 @@
         connection_password: ServiceP@ss123!
         encrypt: no
         executable: powershell.exe
-        arguments: -username hccadmin -password ServiceP@ss123! -Verbose
+        arguments: '-'
         stdin: |
             $ErrorActionPreference = "Stop"
             $url = "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Upgrade-PowerShell.ps1"
-            Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
+            $file = "$env:SystemDrive\temp\Upgrade-PowerShell.ps1"
+            $username = "hccadmin"
+            $password = "ServiceP@ss123!"
+            (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+            Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force
+            &$file -Version 5.1 -Username $username -Password $password -Verbose
             exit
       delegate_to: localhost
       
