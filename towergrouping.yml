@@ -4,7 +4,7 @@
     - name: Add tower group
       tower_group:
         tower_host: 10.196.16.86
-        tower_username: ansibletower        
+        tower_username: admin        
         tower_password: Tower@ccess!23
         name: os_{{ ansible_distribution }}
         inventory: "Cloud Servers"
