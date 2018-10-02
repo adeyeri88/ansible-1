@@ -8,6 +8,7 @@
         connection_username: hccadmin
         connection_password: ServiceP@ss123!
         encrypt: no
+        integrity_level: elevated
         executable: powershell.exe
         arguments: '-'
         stdin: |
