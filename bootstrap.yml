@@ -9,7 +9,7 @@
         connection_password: ServiceP@ss123!
         encrypt: no
         executable: powershell.exe
-        arguments: -version 3.0 -username hccadmin -password ServiceP@ss123! -Verbose
+        arguments: -username hccadmin -password ServiceP@ss123! -Verbose
         stdin: |
             $ErrorActionPreference = "Stop"
             $url = "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Upgrade-PowerShell.ps1"
