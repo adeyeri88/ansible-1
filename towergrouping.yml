@@ -3,7 +3,7 @@
   tasks:
     - name: Add tower group
       tower_group:
-        name: os_Windows
+        name: os_{{ ansible_distribution }}
         inventory: "Cloud Servers"
         state: present
         group_by:
