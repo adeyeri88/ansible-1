@@ -4,4 +4,23 @@
 
   tasks:
   - name: Run detectPSVersion
-    include_tasks: detectPSVersion.yml       
+    psexec:
+        hostname: '{{ansible_host}}'
+        connection_username: '{{ansible_user}}'
+        connection_password: '{{ansible_password}}'
+        encrypt: no
+        integrity_level: elevated
+        process_username: '{{ansible_user}}'
+        process_password: '{{ansible_password}}'
+        executable: powershell.exe
+        arguments: '-'
+        stdin: |
+            $ErrorActionPreference = "Stop"
+            Write-Host $PSVersionTable.PSVersion.ToString()
+            exit
+    delegate_to: localhost
+    register: powershell_version
+
+  - name: Output  
+    debug:
+      var: powershell_version.stdout_lines
