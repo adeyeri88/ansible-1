@@ -1,5 +1,6 @@
 ---
 - hosts: windows
+  connection: local
   tasks:
     - block:
         - name: Check to see if host is reachable
@@ -11,8 +12,7 @@
         - debug": msg="Reachable, added to group "            
       rescue:
         - debug": msg="Unreachable, not added to group "
-  delegate_to: localhost
-
+  
 - hosts: win_reachable
   tasks:       
     - include_role:
