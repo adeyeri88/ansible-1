@@ -13,4 +13,4 @@
     Write-Host $PSVersionTable.PSVersion.ToString()
   register: powershell_version
   debug:
-    var: {{ powershell_version.stdout_lines }}
+    var: powershell_version.stdout_lines
