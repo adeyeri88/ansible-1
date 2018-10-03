@@ -9,11 +9,14 @@
         connection_username: hccadmin
         connection_password: ServiceP@ss123!
         encrypt: no
+        load_profile: yes
+        process_username: hccadmin
+        process_password: ServiceP@ss123!
+        integrity_level: elevated
         executable: powershell.exe
         arguments: Write-Host $PSVersionTable.PSVersion.ToString()
     delegate_to: localhost
     register: powershell_version
-    become_user: System
 
   - name: Output  
     debug:
