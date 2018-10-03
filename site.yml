@@ -13,7 +13,7 @@
             msg: "Reachable, {{ ansible_hostname }} added to group "            
       rescue:
         - debug: 
-            msg: "Unreachable, {{ inventory_hostname }} not reachable but attempting to bootstrap "
+            msg: "Unreachable, {{ ansible_hostname }} not reachable but attempting to bootstrap "
         - name: Call Bootstrap.yml to Upgrade PowerShell as needed for Windows hosts
           import_tasks: bootstrap.yml        
 

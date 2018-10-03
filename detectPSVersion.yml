@@ -1,0 +1,16 @@
+---
+- Name: Check whether the host supports encryption
+  win_shell: |
+    if ([System.Environment]::OSVersion.Version -lt [Version]"6.2") {
+        "false"
+    } else {
+        "true"
+    }
+  register: encryption_supported_raw
+
+- Name: Get PowerShell Version
+  win_shell: |
+    Write-Host $PSVersionTable.PSVersion.ToString()
+  register: powershell_version.stdout
+  debug:
+    msg: powershell_version
