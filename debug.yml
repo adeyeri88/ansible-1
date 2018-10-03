@@ -6,20 +6,14 @@
   - name: Run detectPSVersion
     psexec:
         hostname: '{{ansible_host}}'
-        load_profile: no
         connection_username: hccadmin
         connection_password: ServiceP@ss123!
         encrypt: no
-        integrity_level: elevated
-        process_username: System
         executable: powershell.exe
-        arguments: '-'
-        stdin: |
-            $ErrorActionPreference = "Stop"
-            Write-Host $PSVersionTable.PSVersion.ToString()
-            exit
+        arguments: Write-Host $PSVersionTable.PSVersion.ToString()
     delegate_to: localhost
     register: powershell_version
+    become_user: System
 
   - name: Output  
     debug:
