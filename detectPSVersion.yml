@@ -1,4 +1,6 @@
 ---
+- hosts: windows
+  gather_facts: false
 - Name: Check whether the host supports encryption
   win_shell: |
     if ([System.Environment]::OSVersion.Version -lt [Version]"6.2") {
