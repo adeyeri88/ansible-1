@@ -10,12 +10,15 @@
             "true"
         }
     register: encryption_supported_raw
+    delegate_to: localhost
 
   - name: Get PowerShell Version
     win_shell: |
         Write-Host $PSVersionTable.PSVersion.ToString()
     register: powershell_version
+    delegate_to: localhost
 
   - name: Output  
     debug:
         var: powershell_version.stdout_lines
+    delegate_to: localhost        
