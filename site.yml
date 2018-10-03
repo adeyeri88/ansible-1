@@ -9,9 +9,11 @@
         - name: Add reachable hosts to win_reachable group
           group_by:
             key: "win_reachable"
-        - debug": msg="Reachable, added to group "            
+        - debug: 
+            msg: "Reachable, added to group "            
       rescue:
-        - debug": msg="Unreachable, not added to group "
+        - debug: 
+            msg: "Unreachable, not added to group "
   
 - hosts: win_reachable
   tasks:       
