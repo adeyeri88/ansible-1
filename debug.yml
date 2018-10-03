@@ -4,4 +4,4 @@
 
   tasks:
   - name: Run detectPSVersion
-    import_tasks: detectPSVersion.yml       
+    include_tasks: detectPSVersion.yml       
