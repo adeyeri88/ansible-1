@@ -10,17 +10,19 @@
           group_by:
             key: "win_reachable"
         - debug: 
-            msg: "Reachable, added to group "            
+            msg: "Reachable, {{ ansible_hostname }} added to group "            
       rescue:
         - debug: 
-            msg: "Unreachable, not added to group "
-  
+            msg: "Unreachable, {{ inventory_hostname }} not reachable but attempting to bootstrap "
+        - name: Call Bootstrap.yml to Upgrade PowerShell as needed for Windows hosts
+          import_tasks: bootstrap.yml        
+
 - hosts: win_reachable
   tasks:       
     - include_role:
         name: windows
     - debug:
-        msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }} and reachable"
+        msg: "System {{ ansible_hostname  }} is architecture {{ ansible_architecture }} and reachable"
 #      when:
 #        - ansible_architecture is search("64")
 
@@ -29,6 +31,6 @@
     - include_role:
         name: linux
     - debug:
-        msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }}"        
+        msg: "System {{ ansible_hostname  }} is architecture {{ ansible_architecture }}"        
 #      when:
 #        - ansible_architecture is search("64")
