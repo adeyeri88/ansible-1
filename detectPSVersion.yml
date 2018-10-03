@@ -11,6 +11,6 @@
 - Name: Get PowerShell Version
   win_shell: |
     Write-Host $PSVersionTable.PSVersion.ToString()
-  register: powershell_version.stdout
+  register: powershell_version
   debug:
-    msg: powershell_version
+    var: {{ powershell_version.stdout_lines }}

@@ -1,9 +1,7 @@
 ---
-- hosts: all
-  gather_facts: True
+- hosts: windows
+  gather_facts: false
 
   tasks:
-  - name: Display all variables/facts known for a host
-    debug:
-      var: hostvars[inventory_hostname]
-    tags: debug_info        
+  - name: Run detectPSVersion
+    import_tasks: detectPSVersion.yml       
