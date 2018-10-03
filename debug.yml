@@ -6,6 +6,7 @@
   - name: Run detectPSVersion
     psexec:
         hostname: '{{ansible_host}}'
+        load_profile: no
         connection_username: hccadmin
         connection_password: ServiceP@ss123!
         encrypt: no
