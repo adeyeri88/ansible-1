@@ -2,37 +2,17 @@
 - hosts: windows
   gather_facts: no
   tasks:
-        - name: Check to see if host is reachable
-          wait_for_connection:
-            timeout: 10
-        - name: Add reachable hosts to win_reachable group
-          group_by:
-            key: "win_reachable"
-        - debug: 
-            msg: "Reachable, {{ ansible_host }} added to group"
+    - include_role:
+        name: windows
+    - debug:
+        msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }}"
+  when: ansible_facts['architecture'] is defined
 
 - hosts: linux
   gather_facts: no
   tasks:
-        - name: Check to see if host is reachable
-          wait_for_connection:
-            timeout: 10
-        - name: Add reachable hosts to nix_reachable group
-          group_by:
-            key: "nix_reachable"
-        - debug: 
-            msg: "Reachable, {{ ansible_host }} added to group" 
-
-- hosts: win_reachable
-  tasks:       
-    - include_role:
-        name: windows
-    - debug:
-        msg: "System {{ ansible_host  }} is architecture {{ ansible_architecture }} and reachable"
-
-- hosts: nix_reachable
-  tasks:
     - include_role:
         name: linux
     - debug:
-        msg: "System {{ ansible_hostname  }} is architecture {{ ansible_architecture }}"
+        msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }}"
+  when: ansible_facts['architecture'] is defined
