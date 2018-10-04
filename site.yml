@@ -2,10 +2,12 @@
 - hosts: windows
   gather_facts: no
   roles:
-      - { role: windows, when: ansible_architecture is defined }
+      - role: windows
+        when: ansible_facts['architecture'] is defined
   
 
 - hosts: linux
   gather_facts: no
   roles:
-      - { role: linux, when: ansible_architecture is defined }
+      - role: linux
+        when: ansible_facts['architecture'] is defined
