@@ -2,17 +2,18 @@
 - hosts: windows
   gather_facts: no
   tasks:
-    - include_role:
+  - include_role:
         name: windows
-    - debug:
+    when: ansible_facts['architecture'] is defined
+  - debug:
         msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }}"
-  when: ansible_facts['architecture'] is defined
+  
 
 - hosts: linux
   gather_facts: no
   tasks:
-    - include_role:
+  - include_role:
         name: linux
-    - debug:
+    when: ansible_facts['architecture'] is defined
+  - debug:
         msg: "System {{ inventory_hostname }} is architecture {{ ansible_architecture }}"
-  when: ansible_facts['architecture'] is defined
