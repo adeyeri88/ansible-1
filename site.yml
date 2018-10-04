@@ -4,10 +4,14 @@
   roles:
       - role: windows
         when: ansible_facts['architecture'] is defined
-  
+  debug:
+    msg: ansible_facts['architecture']   
 
 - hosts: linux
   gather_facts: no
   roles:
       - role: linux
         when: ansible_facts['architecture'] is defined
+
+  debug:
+    msg: ansible_facts['architecture']
