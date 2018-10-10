@@ -5,5 +5,5 @@
      loop_var: filename
    with_items:
      - install-csp
-#     - install-tanium
+     - install-tanium
      - install-splunk
