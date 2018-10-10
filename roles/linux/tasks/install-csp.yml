@@ -1,5 +1,126 @@
 ---
-  - name: Print some debug information 
-    debug: 
+### installation of UTC security software, cerificates, registration with security consoles.
+### BEGIN CSP CONFIG
+
+### Update this variable when RHEL CSP file is updated.
+
+ - name: install-csp | Set CSP bin file name
+   set_fact:
+     csp_bin: "agent64-linux-rhel7_6.7mp3.bin"
+
+ - name: install-csp | Does CSP folder exist?
+   stat:
+     path: /opt/Symantec/sdcssagent
+   register: cspinstalled
+
+ - name: install-csp | Turn off Linux firewall iptables (CSP Requirement)
+   shell: /usr/sbin/iptables -F
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | Turn off SELinux if needed
+   shell: setenforce 0
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | Create /etc/scsp-check-bypass
+   file:
+     path: /etc/scsp-check-bypass
+     state: touch
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | CSP requires a reboot pre install
+   shell: 'sleep 1 && shutdown -r now "Reboot triggered by Ansible" && sleep 1'
+   async: 1
+   poll: 0
+   ignore_errors: yes
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | Wait for linux server to respond to pre install
+   wait_for:
+     host: "{{ inventory_hostname }}"
+     port: "22"
+     state: started         # Port should be open
+     sleep: 10              #
+     delay: 15              # No wait before first check (sec)
+     timeout: 300           # Stop checking after timeout (sec)
+   delegate_to: 127.0.0.1
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp |  Copy agent-cert.ssl to /var/tmp
+   get_url:
+     url: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/symantec/csp/linux/agent-cert.ssl"
+     dest: /var/tmp/agent-cert.ssl
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | Download RHEL 7 CSP install binary
+   get_url:
+     url: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/symantec/csp/linux/{{ csp_bin }}"
+     dest: /var/tmp/{{ csp_bin }}
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | Adjust permissions on /var/tmp/{{ csp_bin }}
+   file:
+     path: /var/tmp/{{ csp_bin }}
+     owner: root
+     group: root
+     mode: 0755
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | Run installation of CSP
+   shell: ./{{ csp_bin }} –silent -prefix=/opt/Symantec -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443
+   become_user: root
+   args:
+     chdir: /var/tmp/
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | CSP requires a reboot post install
+   shell: 'sleep 1 && shutdown -r now "Reboot triggered by Ansible" && sleep 1'
+   async: 1
+   poll: 0
+   ignore_errors: yes
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install-csp | Wait for linux server to respond to post install reboot
+   wait_for:
+     host: "{{ inventory_hostname }}"
+     port: "22"
+     state: started         # Port should be open
+     sleep: 10              #
+     delay: 15              # No wait before first check (sec)
+     timeout: 300           # Stop checking after timeout (sec)
+   delegate_to: 127.0.0.1
+   when:
+     - not cspinstalled.stat.exists
+
+ - name: install csp | Check to make sure services are running
+   service:
+     name: "{{ item }}"
+     state: started
+   with_items:
+     - sisipsdaemon
+     - sisidsdaemon
+     - sisipsutildaemon
+
+ - name: install csp | Check server communication
+   shell: ./sisipsconfig.sh -t
+   register: sisipsconfig
+   become: yes
+   become_user: sisips
+   args:
+     chdir: /opt/Symantec/sdcssagent/IPS/
+## END CSP CONFIG:
+
+
+ - name: Print some debug information 
+   debug: 
         msg: "LINUX | Install CSP | System {{ inventory_hostname }} has OS {{ansible_distribution}}"   
-    tags: debug_info
+   tags: debug_info
