@@ -1,0 +1,36 @@
+---
+ - name: install-csp | CSP install must happen after SEP install, check SEP install success
+   win_service:
+     name: "Symantec Endpoint Protection"
+   register: SEPserviceresult
+
+ - name: install-csp | Check for CSP service
+   win_service:
+     name: "Symantec Data Center Security Server Agent"
+   register: CSPserviceresult
+
+ - name: install-csp
+   win_package:
+       path: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/symantec/csp/windows/scsp_6.5.0.472.exe"
+       creates_service: "Symantec Data Center Security Server Agent"       
+       state: present
+       arguments: /VERYSILENT /NORESTART
+   when:
+     - SEPserviceresult['exists'] == true
+     - CSPserviceresult['exists'] == false
+
+ - name: install-csp | check for CSP service Post Install
+   win_service:
+     name: "Symantec Data Center Security Server Agent"
+   register: CSPserviceresult
+
+ - name: install-csp | fail play if CSP services are not installed
+   fail:
+     msg: "CSP did not install, do no continue"
+   when:
+     CSPserviceresult['exists'] == false
+
+ - name: Print some debug information 
+   debug: 
+       msg: "Windows | Install CSP | System {{ inventory_hostname }} has OS {{ansible_distribution}}"   
+   tags: debug_info
