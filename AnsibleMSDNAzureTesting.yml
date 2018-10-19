@@ -1,0 +1,211 @@
+---
+- hosts: localhost
+  connection: local
+  tags:
+  - deploy
+  vars:
+    resource_group: ansible-rg
+    admin_username: jsykes
+    admin_password: Charlie3210!
+    winrm_enable_script: SQBuAHYAbwBrAGUALQBFAHgAcAByAGUAcwBzAGkAbwBuACAALQBDAG8AbQBtAGEAbgBkACAAKAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABTAHkAcwB0AGUAbQAuAE4AZQB0AC4AVwBlAGIAQwBsAGkAZQBuAHQAKQAuAEQAbwB3AG4AbABvAGEAZABTAHQAcgBpAG4AZwAoACcAaAB0AHQAcABzADoALwAvAHIAYQB3AC4AZwBpAHQAaAB1AGIAdQBzAGUAcgBjAG8AbgB0AGUAbgB0AC4AYwBvAG0ALwBhAG4AcwBpAGIAbABlAC8AYQBuAHMAaQBiAGwAZQAvAGQAZQB2AGUAbAAvAGUAeABhAG0AcABsAGUAcwAvAHMAYwByAGkAcAB0AHMALwBDAG8AbgBmAGkAZwB1AHIAZQBSAGUAbQBvAHQAaQBuAGcARgBvAHIAQQBuAHMAaQBiAGwAZQAuAHAAcwAxACcAKQApADsAIABFAG4AYQBiAGwAZQAtAFcAUwBNAGEAbgBDAHIAZQBkAFMAUwBQACAALQBSAG8AbABlACAAUwBlAHIAdgBlAHIAIAAtAEYAbwByAGMAZQA=
+    ans_port: 5986
+    ans_optimeout: 60
+    ans_readtimeout: 90
+  tasks:
+  - name: Create CentOS VM
+    azure_rm_virtualmachine:
+      resource_group: ansible-rg
+      name: Centos75
+      admin_username: "{{ admin_username }}"
+      admin_password: "{{ admin_password }}"
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.5'
+        version: latest
+      vm_size: Standard_D1_v2
+      os_type: Linux
+      tags: 
+        os: linux
+    register: linuxvm
+
+  - name: Add host
+    add_host:
+        name: Centos75 # required. The hostname/ip of the host to add to the inventory, can include a colon and a port number.
+        groups: linux # not required. The groups to add the hostname to, comma separated.:
+        ansible_host: "{{ azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+        ansible_user: "{{ admin_username }}"
+        ansible_ssh_pass: "{{ admin_password }}"
+        ansible_host_key_checking: false
+        ansible_connection: paramiko
+        ansible_become: yes
+        ansible_become_pass: "{{ admin_password }}"
+    register: host3
+
+  - name: Create RedHat VM
+    azure_rm_virtualmachine:
+      resource_group: ansible-rg
+      name: RedHat74
+      admin_username: "{{ admin_username }}"
+      admin_password: "{{ admin_password }}"
+      image:
+        offer: RHEL
+        publisher: RedHat
+        sku: '7.4'
+        version: latest
+      vm_size: Standard_D1_v2
+      os_type: Linux
+      tags: 
+        os: linux
+    register: linuxvm
+
+  - name: Add host
+    add_host:
+        name: RedHat74 # required. The hostname/ip of the host to add to the inventory, can include a colon and a port number.
+        groups: linux # not required. The groups to add the hostname to, comma separated.:
+        ansible_host: "{{ azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+        ansible_user: "{{ admin_username }}"
+        ansible_ssh_pass: "{{ admin_password }}"
+        ansible_host_key_checking: false
+        ansible_connection: paramiko
+        ansible_become: yes
+        ansible_become_pass: "{{ admin_password }}"
+    register: host4
+
+
+  - name: Create Windows2012R2 VM
+    azure_rm_virtualmachine:
+      resource_group: ansible-rg
+      name: Winsrv2012R2
+      admin_username: "{{ admin_username }}"
+      admin_password: "{{ admin_password }}"
+      image:
+        offer: WindowsServer
+        publisher: MicrosoftWindowsServer
+        sku: '2012-R2-Datacenter'
+        version: latest
+      vm_size: Standard_D1_v2
+      os_type: Windows
+      tags: 
+        os: windows
+    register: winvm1
+
+  - name: create Azure vm extension to enable HTTPS WinRM listener
+    azure_rm_virtualmachine_extension:
+      name: winrm-extension
+      resource_group: "{{ resource_group }}"
+      virtual_machine_name: Winsrv2012R2
+      publisher: Microsoft.Compute
+      virtual_machine_extension_type: CustomScriptExtension
+      type_handler_version: 1.9
+      settings: '{"commandToExecute": "powershell.exe -ExecutionPolicy ByPass -EncodedCommand {{winrm_enable_script}}"}'
+      auto_upgrade_minor_version: true
+
+  - name: wait for the WinRM port to come online
+    wait_for:
+      port: "{{ ans_port }}"
+      host: "{{ azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+      timeout: 60    
+
+  - name: Add host
+    add_host:
+        name: Winsrv2012R2 # required. The hostname/ip of the host to add to the inventory, can include a colon and a port number.
+        groups: windows # not required. The groups to add the hostname to, comma separated.:
+        ansible_winrm_transport: ntlm
+        ansible_winrm_server_cert_validation: ignore
+        ansible_connection: winrm
+        ansible_host: "{{ azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+        ansible_user: "{{ admin_username }}"
+        ansible_password: "{{ admin_password }}"
+        ansible_port: "{{ ans_port }}"
+        ansible_winrm_operation_timeout_sec: "{{ ans_optimeout }}"
+        ansible_winrm_read_timeout_sec: "{{ ans_readtimeout }}"
+    register: host1
+
+  - name: Create Windows2016 VM
+    azure_rm_virtualmachine:
+      resource_group: ansible-rg
+      name: Winsrv2016
+      admin_username: "{{ admin_username }}"
+      admin_password: "{{ admin_password }}"
+      image:
+        offer: WindowsServer
+        publisher: MicrosoftWindowsServer
+        sku: '2016-Datacenter'
+        version: latest
+      vm_size: Standard_D1_v2
+      os_type: Windows
+      tags: 
+        os: windows
+    register: winvm2
+
+  - name: create Azure vm extension to enable HTTPS WinRM listener
+    azure_rm_virtualmachine_extension:
+      name: winrm-extension
+      resource_group: "{{ resource_group }}"
+      virtual_machine_name: Winsrv2016
+      publisher: Microsoft.Compute
+      virtual_machine_extension_type: CustomScriptExtension
+      type_handler_version: 1.9
+      settings: '{"commandToExecute": "powershell.exe -ExecutionPolicy ByPass -EncodedCommand {{winrm_enable_script}}"}'
+      auto_upgrade_minor_version: true
+
+  - name: Add host
+    add_host:
+        name: Winsrv2016 # required. The hostname/ip of the host to add to the inventory, can include a colon and a port number.
+        groups: windows # not required. The groups to add the hostname to, comma separated.:
+        ansible_winrm_transport: ntlm
+        ansible_winrm_server_cert_validation: ignore
+        ansible_connection: winrm
+        ansible_host: "{{ azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+        ansible_user: "{{ admin_username }}"
+        ansible_password: "{{ admin_password }}"
+        ansible_port: "{{ ans_port }}"
+        ansible_winrm_operation_timeout_sec: "{{ ans_optimeout }}"
+        ansible_winrm_read_timeout_sec: "{{ ans_readtimeout }}"
+    register: host2  
+
+  - name: wait for the WinRM port to come online
+    wait_for:
+      port: "{{ ans_port }}"
+      host: "{{ azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+      timeout: 60
+
+
+- hosts: all
+  roles:
+    - role: linux
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "7"
+  tags:
+    - installsecuritysoftware
+
+- hosts: all
+  roles:
+    - role: windows
+      when: (ansible_os_family == "Windows") and (ansible_distribution_major_version == "10" or ansible_distribution_major_version == "6.3" or ansible_distribution_major_version == "6.2")
+  tags:
+    - installsecuritysoftware
+
+- hosts: localhost
+  connection: local
+  tags:
+  - destroy
+  vars:
+    resource_group: ansible-rg
+  tasks:  
+  - name: remove vm and all resources
+    azure_rm_virtualmachine:
+      resource_group: "{{ resource_group }}"
+      name: "{{ item }}"
+      state: absent
+      remove_on_absent:
+          - network_interfaces
+          - virtual_storage
+          - public_ips
+    with_items:
+      - Winsrv2016
+      - Winsrv2012R2
+      - Centos75
+      - RedHat74
