@@ -31,7 +31,7 @@
       os_type: Linux
       tags: 
         os: linux
-    register: linuxvm
+    register: Centos75
 
   - name: Add host
     add_host:
@@ -44,7 +44,6 @@
         ansible_connection: paramiko
         ansible_become: yes
         ansible_become_pass: "{{ admin_password }}"
-    register: host3
 
   - name: Create RedHat VM
     azure_rm_virtualmachine:
@@ -61,7 +60,7 @@
       os_type: Linux
       tags: 
         os: linux
-    register: linuxvm
+    register: RedHat74
 
   - name: Add host
     add_host:
@@ -74,7 +73,6 @@
         ansible_connection: paramiko
         ansible_become: yes
         ansible_become_pass: "{{ admin_password }}"
-    register: host4
 
 
   - name: Create Windows2012R2 VM
@@ -92,7 +90,7 @@
       os_type: Windows
       tags: 
         os: windows
-    register: winvm1
+    register: Winsrv2012R2
 
   - name: create Azure vm extension to enable HTTPS WinRM listener
     azure_rm_virtualmachine_extension:
@@ -124,7 +122,6 @@
         ansible_port: "{{ ans_port }}"
         ansible_winrm_operation_timeout_sec: "{{ ans_optimeout }}"
         ansible_winrm_read_timeout_sec: "{{ ans_readtimeout }}"
-    register: host1
 
   - name: Create Windows2016 VM
     azure_rm_virtualmachine:
@@ -141,7 +138,7 @@
       os_type: Windows
       tags: 
         os: windows
-    register: winvm2
+    register: Winsrv2016
 
   - name: create Azure vm extension to enable HTTPS WinRM listener
     azure_rm_virtualmachine_extension:
@@ -166,8 +163,7 @@
         ansible_password: "{{ admin_password }}"
         ansible_port: "{{ ans_port }}"
         ansible_winrm_operation_timeout_sec: "{{ ans_optimeout }}"
-        ansible_winrm_read_timeout_sec: "{{ ans_readtimeout }}"
-    register: host2  
+        ansible_winrm_read_timeout_sec: "{{ ans_readtimeout }}"  
 
   - name: wait for the WinRM port to come online
     wait_for:
