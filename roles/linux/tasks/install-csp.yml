@@ -39,7 +39,7 @@
 
  - name: install-csp | Wait for linux server to respond to pre install
    wait_for:
-     host: "{{ inventory_hostname }}"
+     host: "{{ ansible_host }}"
      port: "22"
      state: started         # Port should be open
      sleep: 10              #
@@ -58,7 +58,7 @@
 
  - name: install-csp | Download RHEL 7 CSP install binary
    get_url:
-     url: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/symantec/csp/linux/{{ csp_bin }}"
+     url: "https://stautahqm0dg002.blob.core.windows.net/rpm/{{ csp_bin }}"
      dest: /var/tmp/{{ csp_bin }}
    when:
      - not cspinstalled.stat.exists
@@ -74,9 +74,10 @@
 
  - name: install-csp | Run installation of CSP
    shell: ./{{ csp_bin }} –silent -prefix=/opt/Symantec -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443
-   become_user: root
+   become: yes
    args:
      chdir: /var/tmp/
+     creates: /opt/Symantec/sdcssagent/docs/license.txt
    when:
      - not cspinstalled.stat.exists
 
@@ -90,7 +91,7 @@
 
  - name: install-csp | Wait for linux server to respond to post install reboot
    wait_for:
-     host: "{{ inventory_hostname }}"
+     host: "{{ ansible_host }}"
      port: "22"
      state: started         # Port should be open
      sleep: 10              #

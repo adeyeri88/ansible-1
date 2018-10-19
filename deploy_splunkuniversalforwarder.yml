@@ -1,0 +1,39 @@
+---
+- hosts: all
+  tasks:
+  - name: Check to see if Splunk Universal Forwarder service is installed
+    win_service:
+      name: "SplunkForwarder"
+    register: SplunkUFServiceResult
+
+  - name: Touch a file (creates if not present, updates modification time if present)
+    win_file:
+      path: C:\Temp
+      state: directory
+    when: SplunkUFServiceResult['exists'] == false
+
+  - name: Get Splunk Zip
+    win_get_url:
+      url: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/ansible/splunk/splunk.zip"
+      dest: c:\temp\splunk.zip
+    when: SplunkUFServiceResult['exists'] == false
+
+  - name: Unzip Splunk
+    win_unzip:
+      src: C:\temp\splunk.zip
+      dest: C:\temp\ansible\splunk
+      delete_archive: yes
+    when: SplunkUFServiceResult['exists'] == false
+
+  - name: Execute Splunk PowerShell Script
+    win_command: powershell.exe -ExecutionPolicy ByPass -File C:/temp/ansible/splunk/install_splunk_uf_v1.1.0.ps1
+    when: SplunkUFServiceResult['exists'] == false
+
+  - name: Print some debug information 
+    vars: 
+      msg: |
+          Ansible Distribution: {{ ansible_distribution }}
+          Ansible Dist version: {{ ansible_distribution_version }}
+    debug: 
+      msg: "{{ msg.split('\n') }}"       
+    tags: debug_info

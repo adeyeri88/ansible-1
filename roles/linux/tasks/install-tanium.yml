@@ -12,8 +12,22 @@
    when:
      - not taniuminstalled.stat.exists
 
- - wait_for:
+ - name: install-tanium | wait for Tanium rpm
+   wait_for:
      path: /var/tmp/TaniumClient-7.2.314.3211-1.rhe7.x86_64.rpm
+   when:
+     - not taniuminstalled.stat.exists
+
+ - name: install-tanium | download Tanium pub
+   get_url:
+     url: https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/tanium/Linux/tanium.pub
+     dest: /var/tmp/tanium.pub
+   when:
+     - not taniuminstalled.stat.exists
+
+ - name: install-tanium | wait for Tanium pub
+   wait_for:
+     path: /var/tmp/tanium.pub
    when:
      - not taniuminstalled.stat.exists
 
@@ -33,7 +47,7 @@
 
  - name: install-tanium | copy tainum.pub file to correct folder
    copy:
-     src: tanium.pub
+     src: /var/tmp/tanium.pub
      dest: /opt/Tanium/TaniumClient/tanium.pub
      owner: root
      group: root
