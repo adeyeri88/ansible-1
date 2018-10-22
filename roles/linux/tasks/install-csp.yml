@@ -74,10 +74,11 @@
 
  - name: install-csp | Run installation of CSP
    shell: ./{{ csp_bin }} -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443 –silent
+   become: yes
    become_user: root
    args:
      chdir: /var/tmp/
-     creates: /opt/Symantec/sdcssagent/docs/license.txt
+     executable: /bin/sh
    when:
      - not cspinstalled.stat.exists
 
