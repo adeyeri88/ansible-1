@@ -7,9 +7,10 @@
  - name: install-sep
    win_package:
     path: https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/symantec/sep/windows/setup.exe
-    product_id: '{BB021296-8731-4B36-9018-CCD85185CDC2}'
+    creates_service: "Symantec Endpoint Protection"
+    #product_id: '{BB021296-8731-4B36-9018-CCD85185CDC2}'
     state: present
-    validate_certs: no
+    #validate_certs: no
    register: SEPInstall
 
  - name: install-sep | reboot if required
