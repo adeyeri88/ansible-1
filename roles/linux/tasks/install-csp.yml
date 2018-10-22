@@ -17,10 +17,17 @@
    when:
      - not cspinstalled.stat.exists
 
+ - name: install-csp | Check SELinux status
+   shell: sestatus | grep "SELinux status"
+   register: sestatus
+   when: 
+     - not cspinstalled.stat.exists
+
  - name: install-csp | Turn off SELinux if needed
    shell: setenforce 0
    when:
      - not cspinstalled.stat.exists
+     - sestatus['stdout'] is search("enabled")
 
  - name: install-csp | Create /etc/scsp-check-bypass
    file:
@@ -53,6 +60,9 @@
    get_url:
      url: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/symantec/csp/linux/agent-cert.ssl"
      dest: /var/tmp/agent-cert.ssl
+     mode: 0755
+     owner: root
+     group: root
    when:
      - not cspinstalled.stat.exists
 
@@ -74,9 +84,7 @@
 
  - name: install-csp | Run installation of CSP
    shell: ./{{ csp_bin }}  –silent -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443
-   become: yes
    become_user: root
-   become_method: su
    args:
      chdir: /var/tmp/
      executable: /bin/sh
