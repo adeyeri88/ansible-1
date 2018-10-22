@@ -179,14 +179,14 @@
         - ansible_os_family == "RedHat"
         - ansible_distribution_major_version == "7"
   tags:
-    - installsecuritysoftware
+    - installsecuritysoftwarelinux
 
 - hosts: all
   roles:
     - role: windows
       when: (ansible_os_family == "Windows") and (ansible_distribution_major_version == "10" or ansible_distribution_major_version == "6.3" or ansible_distribution_major_version == "6.2")
   tags:
-    - installsecuritysoftware
+    - installsecuritysoftwarewindows
 
 - hosts: localhost
   connection: local
