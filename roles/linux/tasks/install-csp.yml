@@ -73,7 +73,7 @@
      - not cspinstalled.stat.exists
 
  - name: install-csp | Run installation of CSP
-   shell: ./{{ csp_bin }} –silent -prefix=/opt/Symantec -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443
+   shell: ./{{ csp_bin }} -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443 –silent
    become: yes
    args:
      chdir: /var/tmp/
