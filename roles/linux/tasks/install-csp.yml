@@ -73,9 +73,7 @@
      - not cspinstalled.stat.exists
 
  - name: install-csp | Run installation of CSP
-   shell: ./{{ csp_bin }} -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443 –silent
-   become: yes
-   become_user: root
+   shell: ./{{ csp_bin }}  –silent -protocol=https -server=10.196.16.68 -cert=/var/tmp/agent-cert.ssl -agentport=443
    args:
      chdir: /var/tmp/
      executable: /bin/sh
