@@ -9,7 +9,7 @@
    loop_control:
      loop_var: filename
    with_items:
-     - install-sep
+     - install-sep12
      - install-csp
      - install-tanium
      - install-splunk
