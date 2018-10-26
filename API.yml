@@ -1,0 +1,12 @@
+- hosts: localhost
+  vars:
+    resource_group:
+  tasks:
+
+    - name: Sample for Azure REST API - Galleries_List
+      azure_rm_resource_facts:
+        # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/providers/Microsoft.Compute/galleries
+        api_version: '2018-06-01'
+        provider: compute
+        resource_type: galleries
+    

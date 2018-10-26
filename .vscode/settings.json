@@ -1,4 +1,5 @@
 {
-    "ansible.cloudShellConfirmed": true
+    "ansible.cloudShellConfirmed": true,
+    "python.pythonPath": "C:\\Users\\jonhs\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe"
 }
 
