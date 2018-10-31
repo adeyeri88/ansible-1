@@ -657,6 +657,7 @@ class AzureInventory(object):
                             host_vars['ansible_host'] = ip_config.private_ip_address
                             # change name to private ip address
                             host_vars['name'] = ip_config.private_ip_address
+                            # add subnet id
                             subnet_id_reference = ip_config.subnet.id
                             host_vars['subnet_id'] = subnet_id_reference       
                         if ip_config.public_ip_address:
@@ -673,7 +674,7 @@ class AzureInventory(object):
                             if public_ip_address.dns_settings:
                                 host_vars['fqdn'] = public_ip_address.dns_settings.fqdn
         
-        #if '5111-net-pwahq-m1dexjv101-site2siteVPN' not in host_vars['subnet'] and '5111-net-pwahq-m1dexjv101-quarantine' not in host_vars['subnet']:
+        if '5111-net-pwahq-m1dexjv101-site2siteVPN' not in subnet_id_reference and '5111-net-pwahq-m1dexjv101-quarantine' not in subnet_id_reference:
             self._add_host(host_vars)
 
     def _selected_machines(self, virtual_machines):
