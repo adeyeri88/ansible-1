@@ -677,7 +677,7 @@ class AzureInventory(object):
                                 host_vars['fqdn'] = public_ip_address.dns_settings.fqdn
         
             # filter out VMs associated with certain VNets
-            if ('site2siteVPN' not in virtual_network_name) and ('quarantine' not in virtual_network_name):
+            if ('site2siteVPN' not in virtual_network_name) and ('quarantine' not in virtual_network_name) and ('running' in host_vars['powerstate']):
                 self._add_host(host_vars)
 
     def _selected_machines(self, virtual_machines):
