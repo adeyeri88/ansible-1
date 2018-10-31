@@ -657,11 +657,7 @@ class AzureInventory(object):
                             host_vars['ansible_host'] = ip_config.private_ip_address
                             # change name to private ip address
                             host_vars['name'] = ip_config.private_ip_address
-                            vnet = networ
                             subnet_id_reference = ip_config.subnet.id
-                            #subnet_ip_name = self._network_client.subnets.get(
-                            #    subnet_ip_reference['resourceGroups'],
-                            #    subnet_ip_reference['Subnets'])
                             host_vars['subnet_id'] = subnet_id_reference       
                         if ip_config.public_ip_address:
                             public_ip_reference = self._parse_ref_id(ip_config.public_ip_address.id)
