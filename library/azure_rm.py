@@ -658,8 +658,10 @@ class AzureInventory(object):
                             # change name to private ip address
                             host_vars['name'] = ip_config.private_ip_address
                             # add subnet id
-                            subnet_id_reference = ip_config.subnet.id
-                            host_vars['subnet_id'] = subnet_id_reference.casefold()       
+                            subnet_id_reference = self._parse_ref_id(ip_config.subnet.id)
+                            virtual_network_name = subnet_id_reference['virtualNetworks']
+                            #host_vars['subnet_id'] = subnet_id_reference['subnet']
+                            host_vars['virtual_network_name'] = virtual_network_name
                         if ip_config.public_ip_address:
                             public_ip_reference = self._parse_ref_id(ip_config.public_ip_address.id)
                             public_ip_address = self._network_client.public_ip_addresses.get(
@@ -674,8 +676,9 @@ class AzureInventory(object):
                             if public_ip_address.dns_settings:
                                 host_vars['fqdn'] = public_ip_address.dns_settings.fqdn
         
-        if "5111-net-pwahq-m1dexjv101-site2siteVPN".casefold() not in subnet_id_reference and "5111-net-pwahq-m1dexjv101-quarantine".casefold() not in subnet_id_reference:
-            self._add_host(host_vars)
+        #if subnet_id_reference.find(('site2siteVPN'.lower())) == -1:
+            if ('site2siteVPN' not in virtual_network_name) and ('quarantine' not in virtual_network_name):
+                self._add_host(host_vars)
 
     def _selected_machines(self, virtual_machines):
         selected_machines = []
