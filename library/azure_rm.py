@@ -659,7 +659,7 @@ class AzureInventory(object):
                             host_vars['name'] = ip_config.private_ip_address
                             subnet_ip_reference = self._parse_ref_id(ip_config.subnet.id)
                             subnet_ip_name = self._network_client.subnets.get(subnet_ip_reference['subnets'])
-                            host_vars['subnet'] = get(ipconfig.subnet.        
+                            host_vars['subnet'] = self._network_client.       
                         if ip_config.public_ip_address:
                             public_ip_reference = self._parse_ref_id(ip_config.public_ip_address.id)
                             public_ip_address = self._network_client.public_ip_addresses.get(
