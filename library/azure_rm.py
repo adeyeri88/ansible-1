@@ -653,11 +653,13 @@ class AzureInventory(object):
                     for ip_config in network_interface.ip_configurations:
                         host_vars['private_ip'] = ip_config.private_ip_address
                         host_vars['private_ip_alloc_method'] = ip_config.private_ip_allocation_method
-                        host_vars['subnet'] = ip_config.subnet
                         if self.use_private_ip:
                             host_vars['ansible_host'] = ip_config.private_ip_address
                             # change name to private ip address
                             host_vars['name'] = ip_config.private_ip_address
+                            subnet_ip_reference = self._parse_ref_id(ip_config.subnet.id)
+                            subnet_ip_name = self._network_client.subnets.get(subnet_ip_reference['subnets'])
+                            host_vars['subnet'] = get(ipconfig.subnet.        
                         if ip_config.public_ip_address:
                             public_ip_reference = self._parse_ref_id(ip_config.public_ip_address.id)
                             public_ip_address = self._network_client.public_ip_addresses.get(
