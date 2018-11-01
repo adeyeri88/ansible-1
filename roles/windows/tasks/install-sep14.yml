@@ -1,9 +1,4 @@
 ---
- - name: install-sep | download clean wipe
-   win_get_url:
-     url: https://stautahqm0dg002.blob.core.windows.net/temp/CleanWipe_14.0.1.zip
-     dest: C:\Temp\CleanWipe_14.0.1.zip
-
  - name: install-sep | check to see if SEP service is installed
    win_service:
      name: "Symantec Endpoint Protection"
@@ -11,7 +6,7 @@
 
  - name: install-sep | download SEP 14
    win_get_url:
-     url: "https://stautahqm0dg002.blob.core.windows.net/msi/SEP14OOS-r3.3.zip"
+     url: "https://stautahqm0dg002.blob.core.windows.net/msi/SEP14.zip"
      dest: C:\Temp\SEP14Install_Ver3.3.zip
    when: SEP14serviceresult['exists'] == false
 
@@ -23,7 +18,7 @@
    when: SEP14serviceresult['exists'] == false
 
  - name: install-sep | install SEP PW Azure Cloud
-   win_command: cscript UTC-ENG-Symantec-Endpoint-Protection-v14.0-RU1-MP2-r1.0.0.vbs /s /region:NA-DMZPC
+   win_command: cscript UTC-ENG-Symantec-Endpoint-Protection-v14.0-RU1-MP2-r1.0.0.vbs /s /imagebuild /r:0 /ForceConfig
    args:
      chdir: 'C:\Temp\SEP14Install\SEP 14 OOS Upgrade r3.3\SEP'
    when:
