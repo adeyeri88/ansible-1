@@ -1,10 +1,12 @@
 ---
-- hosts: windows
-  gather_facts: yes
+- hosts: all
   roles:
-  - { role: windows, when: ansible_architecture is defined}
+    - role: windows
+      when:
+        - ansible_os_family == "Windows"
   
-- hosts: linux
-  gather_facts: yes
+- hosts: all
   roles:
-  - { role: linux, when: ansible_architecture is defined, become: yes}
+    - role: linux
+      when:
+        - ansible_os_family == "RedHat"
