@@ -6,7 +6,7 @@
 
  - name: install-sep | download SEP 14
    win_get_url:
-     url: "https://stautahqm0dg002.blob.core.windows.net/msi/SEP14.zip"
+     url: "https://5111rsgpwam1pmg1admin.blob.core.usgovcloudapi.net/cloudops/tools/ansible/symantec/sep/windows/SEP14.zip"
      dest: C:\Temp\SEP14Install_Ver3.3.zip
    when: SEP14serviceresult['exists'] == false
 
