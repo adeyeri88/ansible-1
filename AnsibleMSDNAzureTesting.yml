@@ -179,14 +179,14 @@
     - role: linux
       when:
         - ansible_os_family == "RedHat"
-        - ansible_distribution_major_version == "7"
   tags:
     - installsecuritysoftwarelinux
 
 - hosts: all
   roles:
     - role: windows
-      when: (ansible_os_family == "Windows")
+      when: 
+        - ansible_os_family == "Windows"
   tags:
     - installsecuritysoftwarewindows
 
