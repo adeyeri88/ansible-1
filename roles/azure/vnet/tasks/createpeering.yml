@@ -1,16 +1,17 @@
 ---
-# Create or update a template deployment based on uris using parameter and template links
-- name: Peer Ansible Test VNet to Ansible Tower VNet
-  azure_rm_deployment:
-    state: present
-    location: southcentralus
-    resource_group_name: testvn1-rg
-    parameters:
-      existingLocalVirtualNetworkName:
-        value: testvnet1
-      existingRemoteVirtualNetworkName: 
-        value: testvnet2
-      existingRemoteVirtualNetworkResourceGroupName:
-        value: testvnet2-rg
-    template: "{{ lookup('file','../roles/azure/vnet/tasks/azuredeploy.json') | from_json }}"
-  delegate_to: 127.0.0.1
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Peer Ansible Test VNet to Ansible Tower VNet
+    azure_rm_deployment:
+      state: present
+      location: southcentralus
+      resource_group_name: testvn1-rg
+      parameters:
+        existingLocalVirtualNetworkName:
+          value: testvnet1
+        existingRemoteVirtualNetworkName: 
+          value: testvnet2
+        existingRemoteVirtualNetworkResourceGroupName:
+          value: testvnet2-rg
+      template: "{{ lookup('file','../roles/azure/vnet/tasks/azuredeploy.json') | from_json }}"
